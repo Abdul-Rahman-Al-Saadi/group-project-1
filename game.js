@@ -1,45 +1,78 @@
-class Example extends Phaser.Scene
-    {
-        preload ()
-        {
-            this.load.setBaseURL('https://labs.phaser.io');
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: "arcade",
+        arcade: {
+            gravity: { y: 0 },
+            debug: false,
+        },
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update,
+    },
+};
 
-            this.load.image('sky', 'assets/skies/space3.png');
-            this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-            this.load.image('red', 'assets/particles/red.png');
-        }
+var game = new Phaser.Game(config);
 
-        create ()
-        {
-            this.add.image(400, 300, 'sky');
-
-            const particles = this.add.particles(0, 0, 'red', {
-                speed: 100,
-                scale: { start: 1, end: 0 },
-                blendMode: 'ADD'
-            });
-
-            const logo = this.physics.add.image(400, 100, 'logo');
-
-            logo.setVelocity(100, 200);
-            logo.setBounce(1, 1);
-            logo.setCollideWorldBounds(true);
-
-            particles.startFollow(logo);
-        }
+class PreloadScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'PreloadScene' });
     }
 
-    const config = {
-        type: Phaser.AUTO,
-        width: 800,
-        height: 600,
-        scene: Example,
-        physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 200 }
-            }
-        }
-    };
+    preload() {
+        // Load the tilemap
+        this.load.tilemapTiledJSON('map', 'assets/tilemaps/maze-map.json');
 
-    const game = new Phaser.Game(config);
+        // Load the tileset image
+        this.load.tilemapTiledJSON("map", "maze-map.json");
+    }
+
+    create() {
+        // After loading, switch to the GameScene
+        this.scene.start('GameScene');
+    }
+}
+class GameScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'GameScene' });
+    }
+
+    create() {
+        // Get the tilemap
+        const map = this.make.tilemap({ key: 'map' });
+
+        // Add the tileset to the map
+        const tileset = map.addTilesetImage('tileset-img', './assets/tilemaps/tileset-img'); // Replace 'tilesetName' with the name you used in Tiled
+
+        // Create layers (replace 'layerName' with the actual name of your layer in Tiled)
+        const layer = map.createLayer('layerName', tileset, 0, 0);
+        
+        // If you have multiple layers, you can create them like this:
+        // const backgroundLayer = map.createLayer('BackgroundLayer', tileset, 0, 0);
+        // const foregroundLayer = map.createLayer('ForegroundLayer', tileset, 0, 0);
+    }
+}
+
+
+
+function preload() {
+    this.load.image("background-img", "assets/images/background-img.jpg");
+    this.load.tilemapTiledJSON("map", "maze-map.json");
+    // this.load.spritesheet("dude", "assets/dude.png", {
+    //     frameWidth: 32,
+    //     frameHeight: 48,
+    // });
+}
+
+function create() {
+    this.add.image(400, 300, "background-img");
+
+}
+
+function update() {
+
+}
