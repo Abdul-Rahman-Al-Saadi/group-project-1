@@ -24,10 +24,14 @@ class MyScene extends Phaser.Scene {
     getValidPositions(map, layer) {
         const positions = [];
         const tileData = layer.layer.data;
+        console.log(tileData);
         for (let y = 0; y < tileData.length; y++) {
             for (let x = 0; x < tileData[y].length; x++) {
                 const tile = tileData[y][x];
+                console.log("Entered the loop");
+                console.log("Tile index:", tile.index); 
                 if (tile.index === -1) {
+                    console.log("Valid position found");
                     positions.push({ x: tile.getCenterX(), y: tile.getCenterY() });
                 }
             }
@@ -60,7 +64,6 @@ class MyScene extends Phaser.Scene {
         }
 
         this.coinSound = this.sound.add('coinSound');
-
         this.coins = this.physics.add.group();
         for (let i = 0; i < this.totalCoins; i++) {
             const randomIndex = Phaser.Math.Between(0, validPositions.length - 1);
@@ -73,9 +76,7 @@ class MyScene extends Phaser.Scene {
 
         this.player = this.physics.add.sprite(50, 590, 'dude');
         this.player.setCollideWorldBounds(true);
-
         layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103, 111, 114, 119, 146]);
-
         this.physics.add.collider(this.player, layer);
 
         this.player.setSize(15, 15);
@@ -115,24 +116,20 @@ class MyScene extends Phaser.Scene {
         });
 
         this.cursors = this.input.keyboard.createCursorKeys();
-
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
-
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
     }
 
     collectCoin(player, coin) {
         this.coinSound.play();
         this.score += 1;
-
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
-
         coin.destroy();
     }
 
     update() {
         this.player.setVelocity(0);
-    
+
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-160);
             this.player.anims.play('left', true);
