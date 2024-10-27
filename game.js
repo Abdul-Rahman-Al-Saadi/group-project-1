@@ -74,7 +74,7 @@ class MyScene extends Phaser.Scene {
         this.coin.play(('flip'));
         this.coin.setDepth(3);
     }
-    }
+    
 
     
         // Add player at a specified location (adjust as needed)
