@@ -59,7 +59,6 @@ class MyScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.tileData = layer.layer.data;
         const validPositions = this.getValidPositions(map, layer);
         if (validPositions.length === 0) {
             console.warn("No valid positions found for coins.");
@@ -70,12 +69,12 @@ class MyScene extends Phaser.Scene {
         this.coinSound = this.sound.add('coinSound');
 
         // Spawn coins (store them in this.coins array)
-        this.coins = this.physics.add.group(); // Create a group for the coins
+        this.coins = this.physics.add.group();
         const totalCoins = 20;
         for (let i = 0; i < totalCoins; i++) {
             const randomIndex = Phaser.Math.Between(0, validPositions.length - 1);
             const { x, y } = validPositions[randomIndex];
-            console.log(x,y);
+            console.log(x, y);
 
             const coin = this.coins.create(x, y, 'coin');
             coin.play('flip');
@@ -91,12 +90,12 @@ class MyScene extends Phaser.Scene {
         // Add collision between player and walls
         this.physics.add.collider(this.player, layer);
     
-        this.player.setSize(15, 15); // Set a new size (width, height)
+        this.player.setSize(15, 15);
         const offsets = {
-            up: { x: 15, y: 20 },    // Offset when moving up
-            down: { x: 20, y: 20 },  // Offset when moving down
-            left: { x: 5, y: 20 },   // Offset when moving left
-            right: { x: 25, y: 20 }  // Offset when moving right
+            up: { x: 15, y: 20 },
+            down: { x: 20, y: 20 },
+            left: { x: 5, y: 20 },
+            right: { x: 25, y: 20 }
         };
 
         // Define animations for walking
@@ -159,7 +158,7 @@ class MyScene extends Phaser.Scene {
             this.player.setVelocityY(160);
             this.player.anims.play('down', true);
         } else {
-            this.player.anims.stop(); // Stop animation when not moving
+            this.player.anims.stop();
         }
     }
 }
