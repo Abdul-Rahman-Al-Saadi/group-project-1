@@ -94,16 +94,7 @@ class MyScene extends Phaser.Scene {
 
         // Spawn coins (store them in this.coins array)
         this.coins = this.physics.add.group();
-        const totalCoins = 20;
-        for (let i = 0; i < totalCoins; i++) {
-            const randomIndex = Phaser.Math.Between(0, validPositions.length - 1);
-            const { x, y } = validPositions[randomIndex];
-            console.log(x, y);
-
-            const coin = this.coins.create(x, y, 'coin');
-            coin.play('flip');
-            coin.setDepth(3);
-        }
+        
 
     // Spawn coins
     const totalCoins = 20;
