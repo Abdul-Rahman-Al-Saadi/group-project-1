@@ -223,7 +223,12 @@ var config = {
             debug: false,
         },
     },
-    scene: [MenuScene,MyScene]
+    scene: [MenuScene,MyScene],
+    scale: {
+        mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
+        autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport
+    },
+    backgroundColor: '#000000' // Background color if image fails to load
 };
 
 var game = new Phaser.Game(config);
