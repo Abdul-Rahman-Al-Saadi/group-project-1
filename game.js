@@ -12,7 +12,7 @@ class MyScene extends Phaser.Scene {
     preload() {
         this.load.image('background', 'assets/images/background-img.jpg');
         this.load.image('tiles', 'assets/tileset/dirtWall.png');
-        this.load.tilemapTiledJSON('map', 'assets/tileset/map.json');
+        this.load.tilemapTiledJSON('map', 'assets/tileset/map-refined1.json');
         this.load.spritesheet('coin', 'assets/images/coin.png', { frameWidth: 15, frameHeight: 16 });
         this.load.spritesheet('dude', 'assets/sprites/characters/player.png', {
             frameWidth: 48,
@@ -24,14 +24,10 @@ class MyScene extends Phaser.Scene {
     getValidPositions(map, layer) {
         const positions = [];
         const tileData = layer.layer.data;
-        console.log(tileData);
         for (let y = 0; y < tileData.length; y++) {
             for (let x = 0; x < tileData[y].length; x++) {
-                const tile = tileData[y][x];
-                console.log("Entered the loop");
-                console.log("Tile index:", tile.index); 
+                const tile = tileData[y][x]; 
                 if (tile.index === -1) {
-                    console.log("Valid position found");
                     positions.push({ x: tile.getCenterX(), y: tile.getCenterY() });
                 }
             }
@@ -65,20 +61,27 @@ class MyScene extends Phaser.Scene {
 
         this.coinSound = this.sound.add('coinSound');
         this.coins = this.physics.add.group();
+        for (let i = 0; i < this.totalCoins; i++) {
+            const randomIndex = Phaser.Math.Between(0, validPositions.length - 1);
+            const { x, y } = validPositions[randomIndex];
+
+            const coin = this.coins.create(x, y, 'coin');
+            coin.play('flip');
+            coin.setDepth(3);
+        }
         
 
         this.player = this.physics.add.sprite(50, 590, 'dude');
         this.player.setCollideWorldBounds(true);
-        layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103, 111, 114, 119, 146]);
+        console.log(layer.data);
+
+        // Make a function to automate the setCollistion array
+        layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103,109,110, 111, 114, 119,125,126, 146]);
+        // layer.setCollision(Array.from(new set(layer.data)))
+        console.log(layer);
         this.physics.add.collider(this.player, layer);
 
         this.player.setSize(15, 15);
-        const offsets = {
-            up: { x: 15, y: 20 },
-            down: { x: 20, y: 20 },
-            left: { x: 5, y: 20 },
-            right: { x: 25, y: 20 }
-        };
 
         this.anims.create({
             key: 'left',
