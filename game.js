@@ -1,3 +1,4 @@
+
 class MyScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MyScene' });
@@ -177,8 +178,7 @@ class MyScene extends Phaser.Scene {
         });
         */
 
-        
-
+       
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
@@ -223,7 +223,12 @@ var config = {
             debug: false,
         },
     },
-    scene: MyScene
+    scene: [MenuScene,MyScene],
+    scale: {
+        mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
+        autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport
+    },
+    backgroundColor: '#000000' // Background color if image fails to load
 };
 
 var game = new Phaser.Game(config);
