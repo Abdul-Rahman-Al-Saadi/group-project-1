@@ -1,3 +1,4 @@
+
 class MyScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MyScene' });
@@ -134,6 +135,40 @@ class MyScene extends Phaser.Scene {
             repeat: -1
         });
 
+        
+
+        // Lily Animation Creation
+        /*
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('dudeLeft', { start: 0, end: 7 }), 
+            frameRate: 10,
+            repeat: -1
+        });
+    
+        this.anims.create({
+            key: 'right',
+            frames: this.anims.generateFrameNumbers('dudeRight', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+    
+        this.anims.create({
+            key: 'up',
+            frames: this.anims.generateFrameNumbers('dudeUp', { start: 0, end: 7 }), 
+            frameRate: 10,
+            repeat: -1
+        });
+    
+        this.anims.create({
+            key: 'down',
+            frames: this.anims.generateFrameNumbers('dudeDown', { start: 0, end: 7 }), 
+            frameRate: 10,
+            repeat: -1
+        });
+        */
+
+       
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
@@ -226,7 +261,12 @@ var config = {
             debug: false,
         },
     },
-    scene: MyScene
+    scene: [MenuScene,MyScene],
+    scale: {
+        mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
+        autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport
+    },
+    backgroundColor: '#000000' // Background color if image fails to load
 };
 
 var hasGameFinished = false;
