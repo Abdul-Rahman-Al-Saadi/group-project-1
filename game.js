@@ -14,44 +14,13 @@ class MyScene extends Phaser.Scene {
         this.load.image('background', 'assets/images/background-img.jpg');
         this.load.image('tiles', 'assets/tileset/dirtWall.png');
         this.load.tilemapTiledJSON('map', 'assets/tileset/map-refined1.json');
+        this.load.image('key', 'assets/sprites/objects/key.png');
+        this.load.spritesheet('door', 'assets/sprites/objects/Door.png', {frameWidth: 200, frameHeight:220});
         this.load.spritesheet('coin', 'assets/images/coin.png', { frameWidth: 15, frameHeight: 16 });
-
-        //Mason Preload
-        
         this.load.spritesheet('dude', 'assets/sprites/characters/player.png', {
             frameWidth: 48,
             frameHeight: 50
         });
-        
-
-        // Lily Preload
-        /*
-        this.load.spritesheet('dude', 'assets/sprites/characters/lily/idle/idle.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-
-        this.load.spritesheet('dudeLeft', 'assets/sprites/characters/lily/Walk/walk_left_down.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-    
-        this.load.spritesheet('dudeRight', 'assets/sprites/characters/lily/Walk/walk_right_down.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-    
-        this.load.spritesheet('dudeUp', 'assets/sprites/characters/lily/Walk/walk_up.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-    
-        this.load.spritesheet('dudeDown', 'assets/sprites/characters/lily/Walk/walk_down.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-        */
-
         this.load.audio('coinSound', 'assets/audio/retro-coin.mp3');
     }
 
@@ -80,6 +49,11 @@ class MyScene extends Phaser.Scene {
         background.setDepth(0);
         layer.setDepth(1);
 
+        this.cameras.main.setBackgroundColor(0x87ceeb);
+
+        // this.spotlight = this.add.graphics();
+        // this.spotlight.setDepth(2);
+
         this.anims.create({
             key: 'flip',
             frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 3 }),
@@ -104,10 +78,14 @@ class MyScene extends Phaser.Scene {
             coin.setDepth(3);
         }
         
-
+        this.key = this.physics.add.sprite(500,593, 'key');
+        this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        this.door.setScale(0.15);
+        
         this.player = this.physics.add.sprite(50, 590, 'dude');
         this.player.setCollideWorldBounds(true);
         console.log(layer.data);
+        this.physics.add.overlap(this.player, this.door, this.openDoor, null, this);
 
         // Make a function to automate the setCollistion array
         layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103,109,110, 111, 114, 119,125,126, 146]);
@@ -117,7 +95,18 @@ class MyScene extends Phaser.Scene {
 
         this.player.setSize(15, 15);
 
-        // Mason Animation Creation
+        this.anims.create({
+            key: 'open',
+            frames: [
+                { key: 'door', frame: 0 }, 
+                { key: 'door', frame: 1 }, 
+                { key: 'door', frame: 2 }, 
+                { key: 'door', frame: 3 }  
+            ],
+            frameRate: 10,
+            repeat: 0 
+        });
+
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 8, end: 10 }), 
@@ -145,6 +134,7 @@ class MyScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+
         
 
         // Lily Animation Creation
@@ -182,6 +172,31 @@ class MyScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+
+    //     this.cameras.main.setBackgroundColor(0x87ceeb); // Set a light background color
+    // this.spotlight = this.add.graphics();
+    // this.spotlight.setDepth(4);
+    this.overlay = this.add.graphics();
+    this.overlay.fillStyle(0x000000, 0.7); // Change opacity of the overlay
+    this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
+    this.overlay.setDepth(5);
+
+    this.maskGraphics = this.add.graphics();
+    this.maskGraphics.fillStyle(0xffffff, 0.1);
+    this.maskGraphics.fillCircle(0, 0, 100); // Circle at (0, 0) with radius 200
+    this.maskGraphics.setDepth(4);
+
+    const mask = this.maskGraphics.createGeometryMask(); 
+    mask.setInvertAlpha();
+    this.overlay.setMask(mask); 
+
+    this.maskGraphics.x = this.player.x; 
+    this.maskGraphics.y = this.player.y;
+    }
+
+    openDoor(player, door){
+        this.door.anims.play('open');
+        hasGameFinished = true;
     }
 
     collectCoin(player, coin) {
@@ -190,6 +205,7 @@ class MyScene extends Phaser.Scene {
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
         coin.destroy();
     }
+    
 
     update() {
         this.player.setVelocity(0);
@@ -209,6 +225,28 @@ class MyScene extends Phaser.Scene {
         } else {
             this.player.anims.stop();
         }
+        this.maskGraphics.x = this.player.x; 
+        this.maskGraphics.y = this.player.y;
+        // this.spotlight.clear();
+
+        // const radius = 100; 
+        // this.spotlight.fillStyle(0xffffff, 0.2); // White color with 50% opacity for transparency
+        // this.spotlight.beginPath();
+        // this.spotlight.arc(this.player.x, this.player.y, radius, 0, Math.PI * 2, false);
+        // this.spotlight.fill();
+
+        // this.overlay.clear();
+        // this.overlay.fillStyle(0x000000, 0.9);
+        // this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
+    
+        // // Update mask position to follow the sprite
+        // this.maskGraphics.x = this.player.x;
+        // this.maskGraphics.y = this.player.y;
+    
+        // // Clear and redraw the mask area
+        // this.maskGraphics.clear();
+        // this.maskGraphics.fillStyle(0xffffff);
+        // this.maskGraphics.fillCircle(0, 0, 100); 
     }
 }
 
@@ -231,4 +269,5 @@ var config = {
     backgroundColor: '#000000' // Background color if image fails to load
 };
 
+var hasGameFinished = false;
 var game = new Phaser.Game(config);
