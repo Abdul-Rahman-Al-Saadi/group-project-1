@@ -13,6 +13,8 @@ class MyScene extends Phaser.Scene {
         this.load.image('background', 'assets/images/background-img.jpg');
         this.load.image('tiles', 'assets/tileset/dirtWall.png');
         this.load.tilemapTiledJSON('map', 'assets/tileset/map-refined1.json');
+        this.load.image('key', 'assets/sprites/objects/key.png');
+        this.load.spritesheet('door', 'assets/sprites/objects/Door.png', {frameWidth: 200, frameHeight:220});
         this.load.spritesheet('coin', 'assets/images/coin.png', { frameWidth: 15, frameHeight: 16 });
         this.load.spritesheet('dude', 'assets/sprites/characters/player.png', {
             frameWidth: 48,
@@ -70,10 +72,14 @@ class MyScene extends Phaser.Scene {
             coin.setDepth(3);
         }
         
-
+        this.key = this.physics.add.sprite(500,593, 'key');
+        this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        this.door.setScale(0.15);
+        
         this.player = this.physics.add.sprite(50, 590, 'dude');
         this.player.setCollideWorldBounds(true);
         console.log(layer.data);
+        this.physics.add.overlap(this.player, this.door, this.openDoor, null, this);
 
         // Make a function to automate the setCollistion array
         layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103,109,110, 111, 114, 119,125,126, 146]);
@@ -82,6 +88,18 @@ class MyScene extends Phaser.Scene {
         this.physics.add.collider(this.player, layer);
 
         this.player.setSize(15, 15);
+
+        this.anims.create({
+            key: 'open',
+            frames: [
+                { key: 'door', frame: 0 }, 
+                { key: 'door', frame: 1 }, 
+                { key: 'door', frame: 2 }, 
+                { key: 'door', frame: 3 }  
+            ],
+            frameRate: 10,
+            repeat: 0 
+        });
 
         this.anims.create({
             key: 'left',
@@ -116,12 +134,18 @@ class MyScene extends Phaser.Scene {
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
     }
 
+    openDoor(player, door){
+        this.door.anims.play('open');
+        hasGameFinished = true;
+    }
+
     collectCoin(player, coin) {
         this.coinSound.play();
         this.score += 1;
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
         coin.destroy();
     }
+    
 
     update() {
         this.player.setVelocity(0);
@@ -158,4 +182,5 @@ var config = {
     scene: MyScene
 };
 
+var hasGameFinished = false;
 var game = new Phaser.Game(config);
