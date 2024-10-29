@@ -1,3 +1,4 @@
+
 class MyScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MyScene' });
@@ -177,8 +178,7 @@ class MyScene extends Phaser.Scene {
         });
         */
 
-        
-
+       
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
@@ -223,7 +223,7 @@ var config = {
             debug: false,
         },
     },
-    scene: MyScene
+    scene: [MenuScene,MyScene]
 };
 
 var game = new Phaser.Game(config);
