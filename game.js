@@ -16,43 +16,10 @@ class MyScene extends Phaser.Scene {
         this.load.image('key', 'assets/sprites/objects/key.png');
         this.load.spritesheet('door', 'assets/sprites/objects/Door.png', {frameWidth: 200, frameHeight:220});
         this.load.spritesheet('coin', 'assets/images/coin.png', { frameWidth: 15, frameHeight: 16 });
-
-        //Mason Preload
-        
         this.load.spritesheet('dude', 'assets/sprites/characters/player.png', {
             frameWidth: 48,
             frameHeight: 50
         });
-        
-
-        // Lily Preload
-        /*
-        this.load.spritesheet('dude', 'assets/sprites/characters/lily/idle/idle.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-
-        this.load.spritesheet('dudeLeft', 'assets/sprites/characters/lily/Walk/walk_left_down.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-    
-        this.load.spritesheet('dudeRight', 'assets/sprites/characters/lily/Walk/walk_right_down.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-    
-        this.load.spritesheet('dudeUp', 'assets/sprites/characters/lily/Walk/walk_up.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-    
-        this.load.spritesheet('dudeDown', 'assets/sprites/characters/lily/Walk/walk_down.png', {
-            frameWidth: 48,
-            frameHeight: 64
-        });
-        */
-
         this.load.audio('coinSound', 'assets/audio/retro-coin.mp3');
     }
 
@@ -122,7 +89,6 @@ class MyScene extends Phaser.Scene {
 
         this.player.setSize(15, 15);
 
-        // Mason Animation Creation
         this.anims.create({
             key: 'open',
             frames: [
@@ -162,40 +128,6 @@ class MyScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-        
-
-        // Lily Animation Creation
-        /*
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('dudeLeft', { start: 0, end: 7 }), 
-            frameRate: 10,
-            repeat: -1
-        });
-    
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('dudeRight', { start: 0, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
-    
-        this.anims.create({
-            key: 'up',
-            frames: this.anims.generateFrameNumbers('dudeUp', { start: 0, end: 7 }), 
-            frameRate: 10,
-            repeat: -1
-        });
-    
-        this.anims.create({
-            key: 'down',
-            frames: this.anims.generateFrameNumbers('dudeDown', { start: 0, end: 7 }), 
-            frameRate: 10,
-            repeat: -1
-        });
-        */
-
-        
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
