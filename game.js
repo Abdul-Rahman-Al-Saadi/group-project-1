@@ -48,6 +48,11 @@ class MyScene extends Phaser.Scene {
         background.setDepth(0);
         layer.setDepth(1);
 
+        this.cameras.main.setBackgroundColor(0x87ceeb);
+
+        // this.spotlight = this.add.graphics();
+        // this.spotlight.setDepth(2);
+
         this.anims.create({
             key: 'flip',
             frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 3 }),
@@ -132,6 +137,26 @@ class MyScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+
+    //     this.cameras.main.setBackgroundColor(0x87ceeb); // Set a light background color
+    // this.spotlight = this.add.graphics();
+    // this.spotlight.setDepth(4);
+    this.overlay = this.add.graphics();
+    this.overlay.fillStyle(0x000000, 0.7); // Change opacity of the overlay
+    this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
+    this.overlay.setDepth(5);
+
+    this.maskGraphics = this.add.graphics();
+    this.maskGraphics.fillStyle(0xffffff, 0.1);
+    this.maskGraphics.fillCircle(0, 0, 100); // Circle at (0, 0) with radius 200
+    this.maskGraphics.setDepth(4);
+
+    const mask = this.maskGraphics.createGeometryMask(); 
+    mask.setInvertAlpha();
+    this.overlay.setMask(mask); 
+
+    this.maskGraphics.x = this.player.x; 
+    this.maskGraphics.y = this.player.y;
     }
 
     openDoor(player, door){
@@ -165,6 +190,28 @@ class MyScene extends Phaser.Scene {
         } else {
             this.player.anims.stop();
         }
+        this.maskGraphics.x = this.player.x; 
+        this.maskGraphics.y = this.player.y;
+        // this.spotlight.clear();
+
+        // const radius = 100; 
+        // this.spotlight.fillStyle(0xffffff, 0.2); // White color with 50% opacity for transparency
+        // this.spotlight.beginPath();
+        // this.spotlight.arc(this.player.x, this.player.y, radius, 0, Math.PI * 2, false);
+        // this.spotlight.fill();
+
+        // this.overlay.clear();
+        // this.overlay.fillStyle(0x000000, 0.9);
+        // this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
+    
+        // // Update mask position to follow the sprite
+        // this.maskGraphics.x = this.player.x;
+        // this.maskGraphics.y = this.player.y;
+    
+        // // Clear and redraw the mask area
+        // this.maskGraphics.clear();
+        // this.maskGraphics.fillStyle(0xffffff);
+        // this.maskGraphics.fillCircle(0, 0, 100); 
     }
 }
 
