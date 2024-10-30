@@ -8,7 +8,7 @@ class MyScene extends Phaser.Scene {
         this.score = 0;
         this.totalCoins = 20; 
 
-        this.timeLeft = 10;
+        this.timeLeft = 3000;
         this.timerEvent;
 
         this.selectedCharacter = 'mason'; 
@@ -188,14 +188,17 @@ class MyScene extends Phaser.Scene {
         });
     }
 
+    this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
 
+    // Set the initial zoom level
+    this.cameras.main.setZoom(2.5); // Normal zoom
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('score').innerText = `Score: ${this.score} / ${this.totalCoins}`;
         // document.getElementById('timer').innerText = `Time Left ${this.timeLeft/60}:${this.timeLeft%60}`;
 
     this.overlay = this.add.graphics();
-    this.overlay.fillStyle(0x000000, 0.7); // Change opacity of the overlay
+    this.overlay.fillStyle(0x000000, 0.9); // Change opacity of the overlay
     this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
     this.overlay.setDepth(5);
 
@@ -270,8 +273,14 @@ class MyScene extends Phaser.Scene {
         } else {
             this.player.anims.stop();
         }
+    
         this.maskGraphics.x = this.player.x; 
         this.maskGraphics.y = this.player.y;
+    
+        
+    
+        // Ensure the camera centers on the player
+        this.cameras.main.centerOn(this.player.x, this.player.y);
 
 
         // const radius = 100; 
