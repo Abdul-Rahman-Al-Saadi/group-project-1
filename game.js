@@ -43,6 +43,10 @@ class MyScene extends Phaser.Scene {
             this.load.spritesheet('dudeDown', 'assets/sprites/characters/lily/Walk/walk_down.png', { frameWidth: 48, frameHeight: 64 });
         }
         this.load.audio('coinSound', 'assets/audio/retro-coin.mp3');
+        this.load.audio('footsteps', 'assets/audio/footsteps.mp3');
+        this.load.audio('backgroundMusic', 'assets/audio/dungeon-air.mp3');
+
+
 
     }
 
@@ -63,6 +67,9 @@ class MyScene extends Phaser.Scene {
     create() {
         let background = this.add.image(0, 0, 'background').setOrigin(0);
         background.setDisplaySize(960, 640);
+        this.backgroundMusic = this.sound.add('backgroundMusic');
+        this.backgroundMusic.play({ loop: true }); // Play the background music on loop
+
 
         const map = this.make.tilemap({ key: 'map' });
         const tiles = map.addTilesetImage('mazeWallsTileset', 'tiles');
@@ -216,6 +223,10 @@ class MyScene extends Phaser.Scene {
     this.maskGraphics.y = this.player.y;
 
     this.timer();
+
+    this.footstepSound = this.sound.add('footsteps');
+
+
     }
 
     openDoor(player, door){
@@ -261,17 +272,22 @@ class MyScene extends Phaser.Scene {
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-160);
             this.player.anims.play('left', true);
+            this.footstepSound.play(); 
         } else if (this.cursors.right.isDown) {
             this.player.setVelocityX(160);
             this.player.anims.play('right', true);
+            this.footstepSound.play(); 
         } else if (this.cursors.up.isDown) {
             this.player.setVelocityY(-160);
             this.player.anims.play('up', true);
+            this.footstepSound.play(); 
         } else if (this.cursors.down.isDown) {
             this.player.setVelocityY(160);
             this.player.anims.play('down', true);
+            this.footstepSound.play(); 
         } else {
             this.player.anims.stop();
+            this.footstepSound.stop();
         }
     
         this.maskGraphics.x = this.player.x; 
