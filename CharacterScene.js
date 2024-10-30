@@ -4,8 +4,8 @@ class CharacterScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('player1', 'assets/menu/player1.png'); 
-        this.load.image('player2', 'assets/menu/player2.png'); 
+        this.load.image('mason', 'assets/menu/player1.png'); 
+        this.load.image('lily', 'assets/menu/player2.png'); 
     }
 
     create() {
@@ -14,7 +14,6 @@ class CharacterScene extends Phaser.Scene {
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
 
-        // Variables to track selections
         this.selectedCharacter = null;
 
         // Character selection title
@@ -25,7 +24,7 @@ class CharacterScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Character 1 (Mason)
-        const character1 = this.add.image(centerX - 100, centerY, 'player1').setOrigin(0.5);
+        const character1 = this.add.image(centerX - 100, centerY, 'mason').setOrigin(0.5);
         character1.displayWidth = 80; 
         character1.displayHeight = 80; 
         this.add.text(centerX - 100, centerY + 50, 'Mason', {
@@ -35,37 +34,39 @@ class CharacterScene extends Phaser.Scene {
         
         character1.setInteractive();
         character1.on('pointerdown', () => {
-            this.selectedCharacter = 'Mason';
+            this.selectedCharacter = 'mason';
             console.log('Selected Character: Mason');
-            character1.setTint(0x00ff00);  // Highlight selected character
-            character2.clearTint();  // Remove highlight from other character
+            character1.setTint(0x00ff00);  
+            character2.clearTint();  
+
+            character2.input.enabled = false; 
         });
 
-        // Character 2
-        const character2 = this.add.image(centerX + 100, centerY, 'player2').setOrigin(0.5);
+        // Character 2 (Lily)
+        const character2 = this.add.image(centerX + 100, centerY, 'lily').setOrigin(0.5);
         character2.displayWidth = 80; 
         character2.displayHeight = 80; 
-        this.add.text(centerX + 100, centerY + 50, 'Character 2', {
+        this.add.text(centerX + 100, centerY + 50, 'Lily', {
             fontSize: '16px',
             fill: '#ffffff'
         }).setOrigin(0.5);
 
         character2.setInteractive();
         character2.on('pointerdown', () => {
-            this.selectedCharacter = 'Character 2';
-            console.log('Selected Character: Character 2');
-            character2.setTint(0x00ff00);  // Highlight selected character
-            character1.clearTint();  // Remove highlight from other character
+            this.selectedCharacter = 'lily';
+            console.log('Selected Character: Lily');
+            character2.setTint(0x00ff00); 
+            character1.clearTint();  
+
+            character1.input.enabled = false; 
         });
 
-        // Username input field
         this.add.text(centerX, centerY + 90, 'Enter Username:', {
             fontFamily: '"Press Start 2P"', 
             fontSize: '24px',
             fill: '#ffffff'
         }).setOrigin(0.5);
 
-        // Create HTML input element
         this.inputField = document.createElement('input');
         this.inputField.type = 'text';
         this.inputField.value = 'YourName';
@@ -82,14 +83,12 @@ class CharacterScene extends Phaser.Scene {
         this.inputField.style.textAlign = 'center';
         document.body.appendChild(this.inputField); 
 
-        // Error message text (hidden initially)
         this.errorMessage = this.add.text(centerX, centerY + 250, '', {
             fontFamily: '"Press Start 2P"',
             fontSize: '20px',
             fill: '#ff0000'
         }).setOrigin(0.5);
 
-        // Play button
         const playButton = this.add.rectangle(centerX, centerY + 200, 120, 40, 0x00ff00);
         this.add.text(centerX, centerY + 200, 'Play', {
             fontFamily: '"Press Start 2P"', 
@@ -108,23 +107,20 @@ class CharacterScene extends Phaser.Scene {
     startGame() {
         const username = this.inputField.value.trim();
 
-        // Check if a character and a valid username are selected
         if (!this.selectedCharacter) {
             this.errorMessage.setText('Please select a character before playing.');
             return;
         }
-        if (username === '') {
-            this.errorMessage.setText('Please enter a username before playing.');
+        if (username === '' || username === 'YourName') {
+            this.errorMessage.setText('Please enter a valid username before playing.');
             return;
         }
 
-        // Clear any previous error message and start the game
         this.errorMessage.setText('');
         console.log(`Username: ${username}`);
         console.log(`Selected Character: ${this.selectedCharacter}`);
 
-        // Start the game and remove the input field from the DOM
-        this.scene.start('MyScene');
+        this.scene.start('MyScene', { selectedCharacter: this.selectedCharacter, username: username });
         document.body.removeChild(this.inputField);
     }
 }
