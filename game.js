@@ -1,4 +1,3 @@
-
 class MyScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MyScene' });
@@ -8,11 +7,16 @@ class MyScene extends Phaser.Scene {
         this.coinSound;
         this.score = 0;
         this.totalCoins = 20; 
+
+        this.timeLeft = 10;
+        this.timerEvent;
+
         this.selectedCharacter = 'mason'; 
     }
 
     init(data) {
         this.selectedCharacter = data.selectedCharacter || 'mason';
+
     }
 
     preload() {
@@ -65,7 +69,7 @@ class MyScene extends Phaser.Scene {
         background.setDepth(0);
         layer.setDepth(1);
 
-        this.cameras.main.setBackgroundColor(0x87ceeb);
+        // this.cameras.main.setBackgroundColor(0x87ceeb);
 
         this.anims.create({
             key: 'flip',
@@ -92,7 +96,8 @@ class MyScene extends Phaser.Scene {
         }
         
         this.key = this.physics.add.sprite(500,593, 'key');
-        this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        // this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        this.door = this.physics.add.sprite(40, 100, 'door', 0);
         this.door.setScale(0.15);
         
         this.player = this.physics.add.sprite(50, 590, 'dude');
@@ -181,14 +186,12 @@ class MyScene extends Phaser.Scene {
         });
     }
 
-       
+
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
-        document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+        document.getElementById('score').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+        // document.getElementById('timer').innerText = `Time Left ${this.timeLeft/60}:${this.timeLeft%60}`;
 
-    //     this.cameras.main.setBackgroundColor(0x87ceeb); // Set a light background color
-    // this.spotlight = this.add.graphics();
-    // this.spotlight.setDepth(4);
     this.overlay = this.add.graphics();
     this.overlay.fillStyle(0x000000, 0.7); // Change opacity of the overlay
     this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
@@ -197,6 +200,7 @@ class MyScene extends Phaser.Scene {
     this.maskGraphics = this.add.graphics();
     this.maskGraphics.fillStyle(0xffffff, 0.1);
     this.maskGraphics.fillCircle(0, 0, 100); // Circle at (0, 0) with radius 200
+    // sprite.postFX.addGradient();
     this.maskGraphics.setDepth(4);
 
     const mask = this.maskGraphics.createGeometryMask(); 
@@ -205,18 +209,44 @@ class MyScene extends Phaser.Scene {
 
     this.maskGraphics.x = this.player.x; 
     this.maskGraphics.y = this.player.y;
+
+    this.timer();
     }
 
     openDoor(player, door){
         this.door.anims.play('open');
-        hasGameFinished = true;
+        this.gameWin();
     }
 
     collectCoin(player, coin) {
         this.coinSound.play();
         this.score += 1;
-        document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+        document.getElementById('score').innerText = `Score: ${this.score} / ${this.totalCoins}`;
         coin.destroy();
+    }
+
+    timer(){
+        if (this.timeLeft > 0){
+            var timerInterval = setInterval(() =>{
+                if (this.timeLeft >0){
+                    this.timeLeft -= 1;
+                    document.getElementById('timer').innerText = `Time Left   ${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}`;
+                    
+                }else{
+                    this.gameOver();
+                    clearInterval(timerInterval);
+                }
+                }, 1000);
+                }
+                
+    }
+
+    gameOver(){
+        this.scene.start('GameOverScene');
+    }
+
+    gameWin(){
+        console.log("won the game");
     }
     
 
@@ -240,7 +270,7 @@ class MyScene extends Phaser.Scene {
         }
         this.maskGraphics.x = this.player.x; 
         this.maskGraphics.y = this.player.y;
-        // this.spotlight.clear();
+
 
         // const radius = 100; 
         // this.spotlight.fillStyle(0xffffff, 0.2); // White color with 50% opacity for transparency
@@ -274,7 +304,7 @@ var config = {
             debug: false,
         },
     },
-    scene: [MenuScene,CharacterScene,MyScene],
+    scene: [MenuScene,CharacterScene,MyScene, GameOverScene],
     scale: {
         mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
         autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport
@@ -283,4 +313,5 @@ var config = {
 };
 
 var hasGameFinished = false;
+var isGameOver = false;
 var game = new Phaser.Game(config);
