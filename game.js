@@ -8,6 +8,8 @@ class MyScene extends Phaser.Scene {
         this.coinSound;
         this.score = 0;
         this.totalCoins = 20; 
+        this.timeLeft = 180;
+        this.timerEvent;
     }
 
     preload() {
@@ -22,6 +24,7 @@ class MyScene extends Phaser.Scene {
             frameHeight: 50
         });
         this.load.audio('coinSound', 'assets/audio/retro-coin.mp3');
+
     }
 
     getValidPositions(map, layer) {
@@ -261,7 +264,7 @@ var config = {
             debug: false,
         },
     },
-    scene: [MenuScene,MyScene],
+    scene: [MenuScene,CharacterScene,MyScene],
     scale: {
         mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
         autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport

@@ -27,7 +27,7 @@ class MenuScene extends Phaser.Scene {
 
         // Start game text with interaction
         const startText = this.add.text(centerX, centerY + 100, 'Start Game', {
-            fontFamily: '"Press Start 2P"', // Consistent font
+            fontFamily: '"Press Start 2P"', 
             fontSize: '32px',
             fill: '#ffffff'
         }).setOrigin(0.5);
@@ -47,7 +47,7 @@ class MenuScene extends Phaser.Scene {
 
     
     startGame() {
-        this.scene.start('MyScene'); 
+        this.scene.start('CharacterScene'); 
     }
     
 }
