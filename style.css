@@ -16,6 +16,7 @@ body {
     flex-direction: column;
     width: 15%;
     position: absolute;
+    gap: 20px;
 }
 
 .score-board > div {
@@ -25,24 +26,22 @@ body {
     padding: 10px; 
     border-radius: 5px;
 }
-/* #score {
-    position: absolute;
-    top: 10px; 
-    right: 10px; 
-    font-size: 24px; 
-    color: black; 
-    background-color: rgba(255, 255, 255, 0.7); 
-    padding: 10px; 
-    border-radius: 5px;
+
+.custom-input {
+    font-family: "Press Start 2P"; /* Font family */
+    font-size: 20px;               /* Font size for the input text */
+    color: #ffffff;                /* Text color */
+    background-color: #333333;    /* Background color */
+    border: none;                  /* No border */
+    padding: 5px;                  /* Padding */
+    width: 250px;                  /* Width */
+    text-align: center;            /* Center text */
+    position: absolute;            /* Positioning */
+    border: 1px solid red; 
 }
 
-#timer {
-    position: absolute;
-    top: 30px; 
-    right: 10px; 
-    font-size: 24px; 
-    color: black; 
-    background-color: rgba(255, 255, 255, 0.7); 
-    padding: 10px; 
-    border-radius: 5px;
-} */
+.custom-input::placeholder {
+    color: #888;                   /* Placeholder text color */
+    font-size: 16px;              /* Font size for the placeholder */
+    opacity: 1;                   /* Full opacity */
+}

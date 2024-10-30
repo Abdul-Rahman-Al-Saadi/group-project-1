@@ -9,6 +9,7 @@ class CharacterScene extends Phaser.Scene {
     }
 
     create() {
+        
         this.cameras.main.setBackgroundColor('#000000');
 
         const centerX = this.sys.game.config.width / 2;
@@ -67,14 +68,16 @@ class CharacterScene extends Phaser.Scene {
             fill: '#ffffff'
         }).setOrigin(0.5);
 
+        const placeHolder = 'Enter your name';
+
         this.inputField = document.createElement('input');
         this.inputField.type = 'text';
         this.inputField.value = 'YourName';
         this.inputField.style.position = 'absolute';
-        this.inputField.style.left = `${centerX + 190}px`; 
-        this.inputField.style.top = `${centerY + 190}px`; 
+        this.inputField.style.left = `${centerX + 80}px`; 
+        this.inputField.style.top = `${centerY + 120}px`; 
         this.inputField.style.fontFamily = '"Press Start 2P"';
-        this.inputField.style.fontSize = '20px';
+        this.inputField.style.fontSize = '12px';
         this.inputField.style.color = '#ffffff';
         this.inputField.style.backgroundColor = '#333333';
         this.inputField.style.border = 'none';
@@ -119,6 +122,7 @@ class CharacterScene extends Phaser.Scene {
         this.errorMessage.setText('');
         console.log(`Username: ${username}`);
         console.log(`Selected Character: ${this.selectedCharacter}`);
+        // this.events.emit('startGame', username);
 
         this.scene.start('MyScene', { selectedCharacter: this.selectedCharacter, username: username });
         document.body.removeChild(this.inputField);
