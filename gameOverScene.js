@@ -1,7 +1,11 @@
 class GameOverScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameOverScene' });
-        this.menuAudio = null; 
+    }
+    init(data) {
+        // Access the username from the passed data
+        this.username = data.username; 
+        console.log("Username in GameOverScene:", this.username); // Check if username is logged correctly
     }
 
     preload() {
@@ -28,10 +32,11 @@ class GameOverScene extends Phaser.Scene {
             fill: '#ffffff'
         }).setOrigin(0.5);
 
-        const userName = this.add.text(centerX, centerY - 100, `You lost`, {
+        console.log(this.username);
+        this.add.text(centerX, centerY +30, `You lost, ${this.username}`, {
             fontFamily: '"Press Start 2P"',
-            fontSize: '64px',
-            fill: '#ff0000'
+            fontSize: '30px',
+            fill: '#ffffff'
         }).setOrigin(0.5);
 
 

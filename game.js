@@ -5,6 +5,7 @@ class MyScene extends Phaser.Scene {
         this.cursors;
         this.coins;
         this.coinSound;
+        this.isKeyPicked = false;
         this.score = 0;
         this.totalCoins = 20; 
 
@@ -16,6 +17,7 @@ class MyScene extends Phaser.Scene {
 
     init(data) {
         this.selectedCharacter = data.selectedCharacter || 'mason';
+        this.username = data.username;
 
     }
 
@@ -59,6 +61,7 @@ class MyScene extends Phaser.Scene {
     }
 
     create() {
+        
         let background = this.add.image(0, 0, 'background').setOrigin(0);
         background.setDisplaySize(960, 640);
 
@@ -95,7 +98,8 @@ class MyScene extends Phaser.Scene {
             coin.setDepth(3);
         }
         
-        this.key = this.physics.add.sprite(500,593, 'key');
+        // this.key = this.physics.add.sprite(500,593, 'key');
+        this.key = this.physics.add.sprite(40,200, 'key');
         // this.door = this.physics.add.sprite(910, 50, 'door', 0);
         this.door = this.physics.add.sprite(40, 100, 'door', 0);
         this.door.setScale(0.15);
@@ -104,6 +108,7 @@ class MyScene extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
         console.log(layer.data);
         this.physics.add.overlap(this.player, this.door, this.openDoor, null, this);
+        this.physics.add.overlap(this.player, this.key, this.pickKey, null, this);
 
         layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103,109,110, 111, 114, 119,125,126, 146]);
         console.log(layer);
@@ -217,6 +222,10 @@ class MyScene extends Phaser.Scene {
         this.door.anims.play('open');
         this.gameWin();
     }
+    pickKey(player, key){
+        this.isKeyPicked = true;
+        key.destroy();
+    }
 
     collectCoin(player, coin) {
         this.coinSound.play();
@@ -242,11 +251,11 @@ class MyScene extends Phaser.Scene {
     }
 
     gameOver(){
-        this.scene.start('GameOverScene');
+        this.scene.start('GameOverScene', { username: this.username });
     }
 
     gameWin(){
-        console.log("won the game");
+        this.scene.start('GameWinScene', {score:this.score, username: this.username, timeLeft: this.timeLeft})
     }
     
 
@@ -304,7 +313,7 @@ var config = {
             debug: false,
         },
     },
-    scene: [MenuScene,CharacterScene,MyScene, GameOverScene],
+    scene: [MenuScene,CharacterScene,MyScene, GameOverScene, GameWinScene],
     scale: {
         mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
         autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport

@@ -4,39 +4,53 @@ class GameWinScene extends Phaser.Scene {
         this.menuAudio = null; 
     }
 
+    init(data) {
+        this.username = data.username; 
+        this.score = data.score;
+        this.timeLeft = data.timeLeft;
+        console.log(this.score, this.timeLeft, this.username);
+    }
+
     preload() {
-        this.load.image('gameWinBackground', 'assets/menu/background.jpg');
     }
 
     create() {
         const graphics = this.add.graphics();
         graphics.fillStyle(0x000000, 1);
         graphics.fillRect(0, 0, this.sys.game.config.width, this.sys.game.config.height);
+        console.log("printin passed elements", this.score, this.timeLeft, this.username);
 
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
 
-        this.add.text(centerX, centerY - 100, 'YOU WIN', {
+        console.log(this.username, this.score, this.timeLeft);
+        this.add.text(centerX, centerY + 100, `YOU WON ${this.username}`, {
             fontFamily: '"Press Start 2P"',
-            fontSize: '64px',
+            fontSize: '50px',
             fill: '#ff0000'
         }).setOrigin(0.5);
 
-        const startText = this.add.text(centerX, centerY + 100, 'The Truth is Unveiled! You’ve Escaped the Dungeon!', {
+        const startText = this.add.text(centerX, centerY, "You've Defeated the Darkness! Freedom Awaits!", {
+            fontFamily: '"Press Start 2P"', 
+            fontSize: '26px',
+            fill: '#ffffff'
+        }).setOrigin(0.5);
+
+        const retryText = this.add.text(centerX, centerY -100, "Up for a new challenge", {
             fontFamily: '"Press Start 2P"', 
             fontSize: '32px',
             fill: '#ffffff'
         }).setOrigin(0.5);
 
-        startText.setInteractive();
-        startText.on('pointerdown', () => this.retry()); 
+        retryText.setInteractive();
+        retryText.on('pointerdown', () => this.retry()); 
 
         this.input.keyboard.on('keydown-ENTER', () => this.retry()); 
     }
 
     
     retry() {
-        console.log("game finished");
+        console.log("game won");
         this.scene.start('MenuScene');
     }
     
