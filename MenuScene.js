@@ -21,9 +21,10 @@ class MenuScene extends Phaser.Scene {
         // Title text
         this.add.text(centerX, centerY - 100, 'Dungeon Crawler', {
             fontFamily: '"Press Start 2P"',
-            fontSize: '64px',
+            fontSize: '58px',
             fill: '#ffffff'
         }).setOrigin(0.5);
+
 
         // Start game text with interaction
         const startText = this.add.text(centerX, centerY + 100, 'Start Game', {
@@ -33,16 +34,10 @@ class MenuScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         startText.setInteractive();
-        startText.on('pointerdown', () => this.startGame()); // Call startGame method
+        startText.on('pointerdown', () => this.startGame());
 
         // Allow Enter key to start the game
-        this.input.keyboard.on('keydown-ENTER', () => this.startGame()); // Call startGame method
-
-        // Play the menu audio
-        /*
-        this.menuAudio = this.sound.add('menuAudio', { loop: true }); 
-        this.menuAudio.play();
-        */
+        this.input.keyboard.on('keydown-ENTER', () => this.startGame()); 
     }
 
     

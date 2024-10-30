@@ -24,19 +24,27 @@ class GameWinScene extends Phaser.Scene {
         const centerY = this.sys.game.config.height / 2;
 
         console.log(this.username, this.score, this.timeLeft);
-        this.add.text(centerX, centerY + 100, `YOU WON ${this.username}`, {
+        const youWinTxt = this.add.text(centerX, centerY -100 , `YOU WON ${this.username}`, {
             fontFamily: '"Press Start 2P"',
             fontSize: '50px',
             fill: '#ff0000'
         }).setOrigin(0.5);
 
+        this.tweens.add({
+            targets: youWinTxt,
+            alpha: { from: 1, to: 0 }, // Fade to transparent
+            duration: 500, // Duration of fade
+            yoyo: true, // Reverse back to the original value
+            repeat: -1 // Repeat indefinitely
+        });
+
         const startText = this.add.text(centerX, centerY, "You've Defeated the Darkness! Freedom Awaits!", {
             fontFamily: '"Press Start 2P"', 
-            fontSize: '26px',
+            fontSize: '20px',
             fill: '#ffffff'
         }).setOrigin(0.5);
 
-        const retryText = this.add.text(centerX, centerY -100, "Up for a new challenge", {
+        const retryText = this.add.text(centerX, centerY +100, "Up for a new challenge", {
             fontFamily: '"Press Start 2P"', 
             fontSize: '32px',
             fill: '#ffffff'

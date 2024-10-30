@@ -40,7 +40,6 @@ class CharacterScene extends Phaser.Scene {
             character1.setTint(0x00ff00);  
             character2.clearTint();  
 
-            character2.input.enabled = false; 
         });
 
         // Character 2 (Lily)
@@ -59,7 +58,6 @@ class CharacterScene extends Phaser.Scene {
             character2.setTint(0x00ff00); 
             character1.clearTint();  
 
-            character1.input.enabled = false; 
         });
 
         this.add.text(centerX, centerY + 90, 'Enter Username:', {
