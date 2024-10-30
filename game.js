@@ -70,10 +70,12 @@ class MyScene extends Phaser.Scene {
         const layer = map.createLayer("Tile Layer 1", tiles, 0, 0);
         layer.setDepth(1);
 
-        // this.key = this.physics.add.sprite(500,593, 'key');
-        this.key = this.physics.add.sprite(40,200, 'key');
-        // this.door = this.physics.add.sprite(910, 50, 'door', 0);
-        this.door = this.physics.add.sprite(40, 100, 'door', 0);
+        this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        this.key = this.physics.add.sprite(500,593, 'key');
+        // testing positions
+        // this.key = this.physics.add.sprite(40,200, 'key');
+        // this.door = this.physics.add.sprite(40, 100, 'door', 0);
+    
         this.door.setScale(0.15);
 
         this.player = this.physics.add.sprite(50, 590, 'dude');
