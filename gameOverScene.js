@@ -28,6 +28,13 @@ class GameOverScene extends Phaser.Scene {
             fill: '#ffffff'
         }).setOrigin(0.5);
 
+        const userName = this.add.text(centerX, centerY - 100, `You lost`, {
+            fontFamily: '"Press Start 2P"',
+            fontSize: '64px',
+            fill: '#ff0000'
+        }).setOrigin(0.5);
+
+
         startText.setInteractive();
         startText.on('pointerdown', () => this.retry()); 
 
