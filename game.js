@@ -8,8 +8,11 @@ class MyScene extends Phaser.Scene {
         this.coinSound;
         this.score = 0;
         this.totalCoins = 20; 
-        this.timeLeft = 180;
-        this.timerEvent;
+        this.selectedCharacter = 'mason'; 
+    }
+
+    init(data) {
+        this.selectedCharacter = data.selectedCharacter || 'mason';
     }
 
     preload() {
@@ -19,10 +22,20 @@ class MyScene extends Phaser.Scene {
         this.load.image('key', 'assets/sprites/objects/key.png');
         this.load.spritesheet('door', 'assets/sprites/objects/Door.png', {frameWidth: 200, frameHeight:220});
         this.load.spritesheet('coin', 'assets/images/coin.png', { frameWidth: 15, frameHeight: 16 });
+        if (this.selectedCharacter === 'mason') {
         this.load.spritesheet('dude', 'assets/sprites/characters/player.png', {
             frameWidth: 48,
             frameHeight: 50
         });
+        }
+        else if (this.selectedCharacter === 'lily') {
+            // Load Lily's sprites
+            this.load.spritesheet('dude', 'assets/sprites/characters/lily/idle/idle.png', { frameWidth: 48, frameHeight: 64 });
+            this.load.spritesheet('dudeLeft', 'assets/sprites/characters/lily/Walk/walk_left_down.png', { frameWidth: 48, frameHeight: 64 });
+            this.load.spritesheet('dudeRight', 'assets/sprites/characters/lily/Walk/walk_right_down.png', { frameWidth: 48, frameHeight: 64 });
+            this.load.spritesheet('dudeUp', 'assets/sprites/characters/lily/Walk/walk_up.png', { frameWidth: 48, frameHeight: 64 });
+            this.load.spritesheet('dudeDown', 'assets/sprites/characters/lily/Walk/walk_down.png', { frameWidth: 48, frameHeight: 64 });
+        }
         this.load.audio('coinSound', 'assets/audio/retro-coin.mp3');
 
     }
@@ -53,9 +66,6 @@ class MyScene extends Phaser.Scene {
         layer.setDepth(1);
 
         this.cameras.main.setBackgroundColor(0x87ceeb);
-
-        // this.spotlight = this.add.graphics();
-        // this.spotlight.setDepth(2);
 
         this.anims.create({
             key: 'flip',
@@ -90,9 +100,7 @@ class MyScene extends Phaser.Scene {
         console.log(layer.data);
         this.physics.add.overlap(this.player, this.door, this.openDoor, null, this);
 
-        // Make a function to automate the setCollistion array
         layer.setCollision([63, 69, 76, 82, 83, 86, 96, 102, 103,109,110, 111, 114, 119,125,126, 146]);
-        // layer.setCollision(Array.from(new set(layer.data)))
         console.log(layer);
         this.physics.add.collider(this.player, layer);
 
@@ -109,6 +117,8 @@ class MyScene extends Phaser.Scene {
             frameRate: 10,
             repeat: 0 
         });
+
+        if (this.selectedCharacter === 'mason') {
 
         this.anims.create({
             key: 'left',
@@ -137,11 +147,11 @@ class MyScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+    }
 
-        
-
+    else if (this.selectedCharacter === 'lily') {
         // Lily Animation Creation
-        /*
+        
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dudeLeft', { start: 0, end: 7 }), 
@@ -169,7 +179,7 @@ class MyScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-        */
+    }
 
        
         this.cursors = this.input.keyboard.createCursorKeys();
