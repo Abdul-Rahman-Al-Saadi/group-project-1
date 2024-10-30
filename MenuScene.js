@@ -47,7 +47,7 @@ class MenuScene extends Phaser.Scene {
 
     
     startGame() {
-        this.scene.start('MyScene'); 
+        this.scene.start('CharacterScene'); 
     }
     
 }
