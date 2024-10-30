@@ -1,4 +1,3 @@
-
 class MyScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MyScene' });
@@ -52,7 +51,7 @@ class MyScene extends Phaser.Scene {
         background.setDepth(0);
         layer.setDepth(1);
 
-        this.cameras.main.setBackgroundColor(0x87ceeb);
+        // this.cameras.main.setBackgroundColor(0x87ceeb);
 
         // this.spotlight = this.add.graphics();
         // this.spotlight.setDepth(2);
@@ -171,14 +170,12 @@ class MyScene extends Phaser.Scene {
         });
         */
 
-       
+
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
-        document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+        document.getElementById('score').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+        document.getElementById('timer').innerText = `Time Left ${this.timeLeft/60}:${this.timeLeft%60}`;
 
-    //     this.cameras.main.setBackgroundColor(0x87ceeb); // Set a light background color
-    // this.spotlight = this.add.graphics();
-    // this.spotlight.setDepth(4);
     this.overlay = this.add.graphics();
     this.overlay.fillStyle(0x000000, 0.7); // Change opacity of the overlay
     this.overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
@@ -187,6 +184,7 @@ class MyScene extends Phaser.Scene {
     this.maskGraphics = this.add.graphics();
     this.maskGraphics.fillStyle(0xffffff, 0.1);
     this.maskGraphics.fillCircle(0, 0, 100); // Circle at (0, 0) with radius 200
+    // sprite.postFX.addGradient();
     this.maskGraphics.setDepth(4);
 
     const mask = this.maskGraphics.createGeometryMask(); 
@@ -195,6 +193,7 @@ class MyScene extends Phaser.Scene {
 
     this.maskGraphics.x = this.player.x; 
     this.maskGraphics.y = this.player.y;
+    this.timer();
     }
 
     openDoor(player, door){
@@ -205,8 +204,19 @@ class MyScene extends Phaser.Scene {
     collectCoin(player, coin) {
         this.coinSound.play();
         this.score += 1;
-        document.getElementById('scoreboard').innerText = `Score: ${this.score} / ${this.totalCoins}`;
+        document.getElementById('score').innerText = `Score: ${this.score} / ${this.totalCoins}`;
         coin.destroy();
+    }
+
+    timer(){
+        setInterval(() =>{
+            this.timeLeft -= 1;
+            console.log(`Time Left ${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}` );
+            document.getElementById('timer').innerText = `Time Left   ${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}`;
+            
+        }, 1000);
+
+        
     }
     
 
@@ -230,7 +240,7 @@ class MyScene extends Phaser.Scene {
         }
         this.maskGraphics.x = this.player.x; 
         this.maskGraphics.y = this.player.y;
-        // this.spotlight.clear();
+
 
         // const radius = 100; 
         // this.spotlight.fillStyle(0xffffff, 0.2); // White color with 50% opacity for transparency
