@@ -1,11 +1,11 @@
-class GameOverScene extends Phaser.Scene {
+class GameWinScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'GameOverScene' });
+        super({ key: 'GameWinScene' });
         this.menuAudio = null; 
     }
 
     preload() {
-        // this.load.image('gameOverBackground', 'assets/menu/background.jpg');
+        this.load.image('gameWinBackground', 'assets/menu/background.jpg');
     }
 
     create() {
@@ -16,13 +16,13 @@ class GameOverScene extends Phaser.Scene {
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
 
-        this.add.text(centerX, centerY - 100, 'GAME OVER', {
+        this.add.text(centerX, centerY - 100, 'YOU WIN', {
             fontFamily: '"Press Start 2P"',
             fontSize: '64px',
             fill: '#ff0000'
         }).setOrigin(0.5);
 
-        const startText = this.add.text(centerX, centerY + 100, 'TRY AGAIN', {
+        const startText = this.add.text(centerX, centerY + 100, 'The Truth is Unveiled! You’ve Escaped the Dungeon!', {
             fontFamily: '"Press Start 2P"', 
             fontSize: '32px',
             fill: '#ffffff'

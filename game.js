@@ -7,7 +7,7 @@ class MyScene extends Phaser.Scene {
         this.coinSound;
         this.score = 0;
         this.totalCoins = 20; 
-        this.timeLeft = 180;
+        this.timeLeft = 10;
         this.timerEvent;
     }
 
@@ -81,7 +81,8 @@ class MyScene extends Phaser.Scene {
         }
         
         this.key = this.physics.add.sprite(500,593, 'key');
-        this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        // this.door = this.physics.add.sprite(910, 50, 'door', 0);
+        this.door = this.physics.add.sprite(40, 100, 'door', 0);
         this.door.setScale(0.15);
         
         this.player = this.physics.add.sprite(50, 590, 'dude');
@@ -174,7 +175,7 @@ class MyScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
         document.getElementById('score').innerText = `Score: ${this.score} / ${this.totalCoins}`;
-        document.getElementById('timer').innerText = `Time Left ${this.timeLeft/60}:${this.timeLeft%60}`;
+        // document.getElementById('timer').innerText = `Time Left ${this.timeLeft/60}:${this.timeLeft%60}`;
 
     this.overlay = this.add.graphics();
     this.overlay.fillStyle(0x000000, 0.7); // Change opacity of the overlay
@@ -193,12 +194,13 @@ class MyScene extends Phaser.Scene {
 
     this.maskGraphics.x = this.player.x; 
     this.maskGraphics.y = this.player.y;
+
     this.timer();
     }
 
     openDoor(player, door){
         this.door.anims.play('open');
-        hasGameFinished = true;
+        this.gameWin();
     }
 
     collectCoin(player, coin) {
@@ -209,14 +211,27 @@ class MyScene extends Phaser.Scene {
     }
 
     timer(){
-        setInterval(() =>{
-            this.timeLeft -= 1;
-            console.log(`Time Left ${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}` );
-            document.getElementById('timer').innerText = `Time Left   ${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}`;
-            
-        }, 1000);
+        if (this.timeLeft > 0){
+            var timerInterval = setInterval(() =>{
+                if (this.timeLeft >0){
+                    this.timeLeft -= 1;
+                    document.getElementById('timer').innerText = `Time Left   ${Math.floor(this.timeLeft / 60)}:${this.timeLeft % 60}`;
+                    
+                }else{
+                    this.gameOver();
+                    clearInterval(timerInterval);
+                }
+                }, 1000);
+                }
+                
+    }
 
-        
+    gameOver(){
+        this.scene.start('GameOverScene');
+    }
+
+    gameWin(){
+        console.log("won the game");
     }
     
 
@@ -274,7 +289,7 @@ var config = {
             debug: false,
         },
     },
-    scene: [MenuScene,CharacterScene,MyScene],
+    scene: [MenuScene,CharacterScene,MyScene, GameOverScene],
     scale: {
         mode: Phaser.Scale.FIT,        // Ensures the game scales to fit the screen
         autoCenter: Phaser.Scale.CENTER_BOTH, // Centers the game in the viewport
@@ -283,4 +298,5 @@ var config = {
 };
 
 var hasGameFinished = false;
+var isGameOver = false;
 var game = new Phaser.Game(config);
