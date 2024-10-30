@@ -4,7 +4,6 @@ class CharacterScene extends Phaser.Scene {
     }
 
     preload() {
-
         this.load.image('player1', 'assets/menu/player1.png'); 
         this.load.image('player2', 'assets/menu/player2.png'); 
     }
@@ -14,6 +13,9 @@ class CharacterScene extends Phaser.Scene {
 
         const centerX = this.sys.game.config.width / 2;
         const centerY = this.sys.game.config.height / 2;
+
+        // Variables to track selections
+        this.selectedCharacter = null;
 
         // Character selection title
         this.add.text(centerX, centerY - 150, 'What Kind of Hero are You?', {
@@ -31,6 +33,14 @@ class CharacterScene extends Phaser.Scene {
             fill: '#ffffff'
         }).setOrigin(0.5);
         
+        character1.setInteractive();
+        character1.on('pointerdown', () => {
+            this.selectedCharacter = 'Mason';
+            console.log('Selected Character: Mason');
+            character1.setTint(0x00ff00);  // Highlight selected character
+            character2.clearTint();  // Remove highlight from other character
+        });
+
         // Character 2
         const character2 = this.add.image(centerX + 100, centerY, 'player2').setOrigin(0.5);
         character2.displayWidth = 80; 
@@ -39,14 +49,22 @@ class CharacterScene extends Phaser.Scene {
             fontSize: '16px',
             fill: '#ffffff'
         }).setOrigin(0.5);
-        
+
+        character2.setInteractive();
+        character2.on('pointerdown', () => {
+            this.selectedCharacter = 'Character 2';
+            console.log('Selected Character: Character 2');
+            character2.setTint(0x00ff00);  // Highlight selected character
+            character1.clearTint();  // Remove highlight from other character
+        });
+
         // Username input field
         this.add.text(centerX, centerY + 90, 'Enter Username:', {
             fontFamily: '"Press Start 2P"', 
             fontSize: '24px',
             fill: '#ffffff'
         }).setOrigin(0.5);
-        
+
         // Create HTML input element
         this.inputField = document.createElement('input');
         this.inputField.type = 'text';
@@ -64,6 +82,13 @@ class CharacterScene extends Phaser.Scene {
         this.inputField.style.textAlign = 'center';
         document.body.appendChild(this.inputField); 
 
+        // Error message text (hidden initially)
+        this.errorMessage = this.add.text(centerX, centerY + 250, '', {
+            fontFamily: '"Press Start 2P"',
+            fontSize: '20px',
+            fill: '#ff0000'
+        }).setOrigin(0.5);
+
         // Play button
         const playButton = this.add.rectangle(centerX, centerY + 200, 120, 40, 0x00ff00);
         this.add.text(centerX, centerY + 200, 'Play', {
@@ -75,16 +100,31 @@ class CharacterScene extends Phaser.Scene {
         playButton.setInteractive();
         playButton.on('pointerover', () => playButton.setFillStyle(0x00cc00)); 
         playButton.on('pointerout', () => playButton.setFillStyle(0x00ff00)); 
-
         playButton.on('pointerdown', () => this.startGame());
+
+        this.playButton = playButton;
     }
 
     startGame() {
-        const username = this.inputField.value;
-        console.log(`Username: ${username}`); 
+        const username = this.inputField.value.trim();
 
+        // Check if a character and a valid username are selected
+        if (!this.selectedCharacter) {
+            this.errorMessage.setText('Please select a character before playing.');
+            return;
+        }
+        if (username === '') {
+            this.errorMessage.setText('Please enter a username before playing.');
+            return;
+        }
+
+        // Clear any previous error message and start the game
+        this.errorMessage.setText('');
+        console.log(`Username: ${username}`);
+        console.log(`Selected Character: ${this.selectedCharacter}`);
+
+        // Start the game and remove the input field from the DOM
         this.scene.start('MyScene');
-        
         document.body.removeChild(this.inputField);
     }
 }
