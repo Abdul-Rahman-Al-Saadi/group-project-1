@@ -8,6 +8,8 @@ class MyScene extends Phaser.Scene {
         this.coinSound;
         this.score = 0;
         this.totalCoins = 20; 
+        this.timeLeft = 180;
+        this.timerEvent;
     }
 
     preload() {
@@ -22,6 +24,7 @@ class MyScene extends Phaser.Scene {
             frameHeight: 50
         });
         this.load.audio('coinSound', 'assets/audio/retro-coin.mp3');
+
     }
 
     getValidPositions(map, layer) {
