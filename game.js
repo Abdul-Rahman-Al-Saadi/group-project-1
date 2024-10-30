@@ -12,6 +12,8 @@ class MyScene extends Phaser.Scene {
         this.timerEvent;
 
         this.selectedCharacter = 'mason'; 
+
+        
     }
 
     init(data) {
